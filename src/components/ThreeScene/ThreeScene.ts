@@ -1,4 +1,5 @@
 import {defineComponent, onMounted } from "vue";
+import axios from 'axios';
 import { toRaw } from "vue";
 
 import SceneBuilder from './SceneBuilder';
@@ -20,6 +21,7 @@ export default defineComponent({
            description:null,
            width: 540,
            rendered:false,
+           users: []
         }
     },
     methods:{
@@ -30,7 +32,7 @@ export default defineComponent({
             this.scene.camera.updateProjectionMatrix();
             this.scene.renderer.setSize( window.innerWidth, window.innerHeight );
             this.updateWindowWidth()
-          }
+        }
     },
     mounted(){
         this.scene = new SceneBuilder(this.$refs.sketch)
@@ -43,6 +45,16 @@ export default defineComponent({
     },
     computed:{
         
+    },
+    beforeMount() {
+        axios
+            .get('/users')
+            .then((res) => {
+                // assign state users with response data
+                console.log(res.data);
+            })
+            .catch((error) => {
+                console.log(error.res.data);
+            });
     }
-  }
-);
+});
